@@ -218,5 +218,5 @@ pip-log.txt
 .idea
 
 # Gitshit
-.gitattributes
-.gitignore
+*.gitattributes
+*.gitignore
