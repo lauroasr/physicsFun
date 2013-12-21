@@ -4,66 +4,71 @@ onload = function() {
 
     Physics(function (world) {
         /* create a renderer */
-         var renderer = Physics.renderer('canvas', {
-             el: 'viewport',
-             width: innerWidth,
-             height: innerHeight - 5,
-             meta: false, // don't display meta data
-             styles: {
-                 // set colors for the circle bodies
-                 'circle' : {
-                     strokeStyle: 'hsla(60, 37%, 17%, 1)',
-                     lineWidth: 1,
-                     fillStyle: 'hsla(60, 37%, 57%, 0.8)',
-                     angleIndicator: 'hsla(60, 37%, 17%, 0.4)'
-                 }
-             }
-         });
-         // add the renderer
-         world.add(renderer);
+        var renderer = Physics.renderer('canvas', {
+            el: 'viewport',
+            width: innerWidth,
+            height: innerHeight - 5,
+            meta: false, // don't display meta data
+            styles: {
+                // set colors for the circle bodies
+                'circle' : {
+                    strokeStyle: 'hsla(60, 37%, 17%, 1)',
+                    lineWidth: 1,
+                    fillStyle: 'hsla(60, 37%, 57%, 0.8)',
+                    angleIndicator: 'hsla(60, 37%, 17%, 0.4)'
+                }
+            }
+        });
+        // add the renderer
+        world.add(renderer);
 
-         /* create the bounds of the simulation */
-         var viewportBounds = Physics.aabb(0, 0, canvas.width - 1, canvas.height - 1);
+        /* create the bounds of the simulation */
+        var viewportBounds = Physics.aabb(0, 0, canvas.width - 1, canvas.height - 1);
 
-         // constrain objects to these bounds
-         world.add(Physics.behavior('edge-collision-detection', {
-             aabb: viewportBounds,
-             restitution: 0.5,
-             cof: 1
-         }));
+        // constrain objects to these bounds
+        world.add(Physics.behavior('edge-collision-detection', {
+            aabb: viewportBounds,
+            restitution: 0.5,
+            cof: 1
+        }));
 
-         /* add gravity */
-         world.add(Physics.behavior('constant-acceleration'));
+        /* add gravity */
+        var gravity = Physics.behavior('constant-acceleration');
+        world.add(gravity);
 
-         /* create a ball */
-         var ball = Physics.body('circle', {
-             x: 50, // x-coordinate
-             y: 30, // y-coordinate
-             vx: 0.2, // velocity in x-direction
-             vy: 0.01, // velocity in y-direction
-             radius: 20
-         });
-         // add the circle to the world
-         world.add(ball);
+        addEventListener('devicemotion', function deviceMotionHandler(event) {
+            var acceleration = event.accelerationIncludingGravity;
+            gravity.setAcceleration({ x: acceleration.x * 0.1, y: acceleration.y * 0.1 });
+        });
 
-         /* make elements collide with walls */
-         // ensure objects bounce when edge collision is detected
-         world.add(Physics.behavior('body-impulse-response'));
+        /* create a ball */
+        var ball = Physics.body('circle', {
+            x: 50, // x-coordinate
+            y: 30, // y-coordinate
+            vx: 0.2, // velocity in x-direction
+            vy: 0.01, // velocity in y-direction
+            radius: 20
+        });
+        // add the circle to the world
+        world.add(ball);
+
+        /* make elements collide with walls */
+        // ensure objects bounce when edge collision is detected
+        world.add(Physics.behavior('body-impulse-response'));
         /* make elements collide with each other */
         world.add( Physics.behavior('body-collision-detection'));
         world.add( Physics.behavior('sweep-prune'));
 
+        /* the game loop */
+        // subscribe to the ticker
+        Physics.util.ticker.subscribe(function (time, dt) {
+            world.step(time);
+            world.render();
+            // Note: FPS ~= 1000/dt
+        });
 
-         /* the game loop */
-         // subscribe to the ticker
-         Physics.util.ticker.subscribe(function (time, dt) {
-             world.step(time);
-             world.render();
-             // Note: FPS ~= 1000/dt
-         });
-
-         // start the ticker
-         Physics.util.ticker.start();
+        // start the ticker
+        Physics.util.ticker.start();
 
 
         canvas.onclick = function () {

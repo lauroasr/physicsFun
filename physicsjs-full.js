@@ -4484,7 +4484,7 @@ Physics.behavior('constant-acceleration', function( parent ){
 
         /**
          * Set the acceleration of the behavior
-         * @param {Vectorish} acc The acceleration vector
+         * @param acc The acceleration vector
          * @return {self}
          */
         setAcceleration: function( acc ){

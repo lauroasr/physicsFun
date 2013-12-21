@@ -216,7 +216,3 @@ pip-log.txt
 
 # JetBrains WebStorm files
 .idea
-
-# Gitshit
-*.gitattributes
-*.gitignore
