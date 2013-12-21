@@ -12,10 +12,10 @@ onload = function() {
             styles: {
                 // set colors for the circle bodies
                 'circle' : {
-                    strokeStyle: 'hsla(60, 37%, 17%, 1)',
+                    strokeStyle: 'grey',
                     lineWidth: 1,
-                    fillStyle: 'hsla(60, 37%, 57%, 0.8)',
-                    angleIndicator: 'hsla(60, 37%, 17%, 0.4)'
+                    fillStyle: 'black',
+                    angleIndicator: 'grey'
                 }
             }
         });
@@ -38,7 +38,7 @@ onload = function() {
 
         addEventListener('devicemotion', function deviceMotionHandler(event) {
             var acceleration = event.accelerationIncludingGravity;
-            gravity.setAcceleration({ x: acceleration.x * 0.1, y: acceleration.y * 0.1 });
+            gravity.setAcceleration({ x: acceleration.x * -0.0005, y: acceleration.y * 0.0005 });
         });
 
         /* create a ball */
@@ -47,7 +47,7 @@ onload = function() {
             y: 30, // y-coordinate
             vx: 0.2, // velocity in x-direction
             vy: 0.01, // velocity in y-direction
-            radius: 20
+            radius: 150
         });
         // add the circle to the world
         world.add(ball);
@@ -78,7 +78,7 @@ onload = function() {
                 y: 30, // y-coordinate
                 vx: .5, // velocity in x-direction
                 vy: 1, // velocity in y-direction
-                radius: Math.random() * 100
+                radius: Math.random() * 100 + 100
             }));
         }
     });
